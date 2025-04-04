@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,18 +20,17 @@ const LandingPage: React.FC = () => {
       return;
     }
     
-    // First create the room
-    createRoom();
+    // Create the room first
+    const newRoomId = createRoom();
+    console.log("Created room with ID:", newRoomId);
     
-    // Then join the room with the newly created room ID
-    setTimeout(() => {
-      const newRoomId = gameState.roomId;
-      console.log("Created room with ID:", newRoomId);
+    // Join the room with the generated room ID
+    if (newRoomId) {
       const joinSuccess = joinRoom(newRoomId, playerName);
       if (joinSuccess) {
         navigate('/waiting-room');
       }
-    }, 200); // Increased timeout to ensure room is created first
+    }
   };
 
   const handleJoinRoom = () => {

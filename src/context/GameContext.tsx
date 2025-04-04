@@ -38,7 +38,7 @@ type GameStateType = {
 type GameContextType = {
   gameState: GameStateType;
   playerInfo: PlayerType | null;
-  createRoom: () => void;
+  createRoom: () => string;
   joinRoom: (roomId: string, playerName: string) => boolean;
   startGame: () => void;
   submitAnswer: (answer: string) => void;
@@ -86,18 +86,22 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Create a new game room
   const createRoom = () => {
     const roomId = generateRoomId();
-    setGameState({
+    
+    setGameState(prevState => ({
       ...initialGameState,
       roomId
-    });
+    }));
     
     toast.success("Room created! Share the room code with your friends");
+    return roomId;
   };
 
   // Join an existing room
   const joinRoom = (roomId: string, playerName: string): boolean => {
+    console.log("Join attempt - Current room ID:", gameState.roomId, "Trying to join:", roomId);
+    
     if (roomId !== gameState.roomId) {
-      toast.error("Invalid room code");
+      toast.error(`Invalid room code: ${roomId}`);
       return false;
     }
 
