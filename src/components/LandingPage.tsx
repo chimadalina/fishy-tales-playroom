@@ -39,7 +39,7 @@ const LandingPage: React.FC = () => {
     if (!playerName.trim() || !roomId.trim()) {
       return;
     }
-    joinRoom(roomId.trim().toUpperCase(), playerName);
+    await joinRoom(roomId.trim().toUpperCase(), playerName);  // Ensure joinRoom is awaited before navigating
     navigate('/waiting-room');
   };
   
