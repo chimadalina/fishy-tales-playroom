@@ -97,7 +97,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // };
 
   const createRoom = async (): Promise<string> => {
-    const roomId = generateRandomRoomCode(); // however you're creating it
+    const roomId = generateRoomId();
     // create the room in DB or server
     toast.success("Room created! Share the room code with your friends");
     setGameState((prev) => ({ ...prev, roomId }));
