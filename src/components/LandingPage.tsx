@@ -15,17 +15,17 @@ const LandingPage: React.FC = () => {
   const { createRoom, joinRoom, gameState } = useGame();
   const navigate = useNavigate();
 
-  const handleCreateRoom = () => {
-    if (!playerName.trim()) {
-      return;
-    }
-    createRoom();
-    // Navigate to the waiting room
-    setTimeout(() => {
-      joinRoom(gameState.roomId, playerName);
-      navigate('/waiting-room');
-    }, 100);
-  };
+  // const handleCreateRoom = () => {
+  //   if (!playerName.trim()) {
+  //     return;
+  //   }
+  //   createRoom();
+  //   // Navigate to the waiting room
+  //   setTimeout(() => {
+  //     joinRoom(gameState.roomId, playerName);
+  //     navigate('/waiting-room');
+  //   }, 100);
+  // };
 
   // const handleJoinRoom = () => {
   //   if (!playerName.trim() || !roomId.trim()) {
@@ -34,6 +34,15 @@ const LandingPage: React.FC = () => {
   //   joinRoom(roomId.trim().toUpperCase(), playerName);
   //   navigate('/waiting-room');
   // };
+
+  const handleJoinRoom = () => {
+    if (!playerName.trim() || !roomId.trim()) {
+      return;
+    }
+    joinRoom(roomId.trim().toUpperCase(), playerName);
+    navigate('/waiting-room');
+  };
+  
 
   const handleCreateRoom = async () => {
     if (!playerName.trim()) return;
