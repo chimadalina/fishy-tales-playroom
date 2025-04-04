@@ -85,12 +85,13 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Create a new game room
   const createRoom = () => {
-    const roomId = generateRoomId();
+    const roomId = "123"
+    // const roomId = generateRoomId();
     
-    setGameState(prevState => ({
-      ...initialGameState,
-      roomId
-    }));
+    // setGameState(prevState => ({
+    //   ...initialGameState,
+    //   roomId
+    // }));
     
     toast.success("Room created! Share the room code with your friends");
     return roomId;
