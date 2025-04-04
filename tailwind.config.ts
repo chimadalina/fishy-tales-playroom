@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,17 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Game-specific colors
+				redFish: '#DC2626',
+				blueFish: '#1E3A8A',
+				lightBlue: '#60A5FA',
+				coral: '#FCA5A5',
+				ocean: {
+					light: '#BFDBFE',
+					DEFAULT: '#3B82F6',
+					dark: '#1E40AF'
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +95,25 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' }
+				},
+				'bubble-rise': {
+					'0%': { transform: 'translateY(100%)', opacity: '0' },
+					'50%': { opacity: '1' },
+					'100%': { transform: 'translateY(-100vh)', opacity: '0' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'float': 'float 3s ease-in-out infinite',
+				'bubble-rise': 'bubble-rise 15s ease-in-out infinite'
+			},
+			fontFamily: {
+				'bubblegum': ['"Bubblegum Sans"', 'cursive']
 			}
 		}
 	},
