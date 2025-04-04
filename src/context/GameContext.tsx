@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from "sonner";
 
@@ -38,8 +39,8 @@ type GameStateType = {
 type GameContextType = {
   gameState: GameStateType;
   playerInfo: PlayerType | null;
-  createRoom: () => string;
-  joinRoom: (roomId: string, playerName: string) => boolean;
+  createRoom: () => void;
+  joinRoom: (roomId: string, playerName: string) => void;
   startGame: () => void;
   submitAnswer: (answer: string) => void;
   guessAnswer: (playerId: string, isCorrect: boolean) => void;
@@ -85,35 +86,30 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Create a new game room
   const createRoom = () => {
-    const roomId = "123"
-    // const roomId = generateRoomId();
-    
-    // setGameState(prevState => ({
-    //   ...initialGameState,
-    //   roomId
-    // }));
+    const roomId = generateRoomId();
+    setGameState({
+      ...initialGameState,
+      roomId
+    });
     
     toast.success("Room created! Share the room code with your friends");
-    return roomId;
   };
 
   // Join an existing room
-  const joinRoom = (roomId: string, playerName: string): boolean => {
-    console.log("Join attempt - Current room ID:", gameState.roomId, "Trying to join:", roomId);
-    
+  const joinRoom = (roomId: string, playerName: string) => {
     if (roomId !== gameState.roomId) {
-      toast.error(`Invalid room code: ${roomId}`);
-      return false;
+      toast.error("Invalid room code");
+      return;
     }
 
     if (gameState.players.length >= 8) {
       toast.error("Room is full");
-      return false;
+      return;
     }
 
     if (gameState.status !== 'waiting') {
       toast.error("Game already started");
-      return false;
+      return;
     }
 
     const isFirstPlayer = gameState.players.length === 0;
@@ -138,7 +134,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }));
 
     toast.success(`Joined room as ${playerName}`);
-    return true;
   };
 
   // Start the game

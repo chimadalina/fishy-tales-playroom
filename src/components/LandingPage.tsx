@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,7 +7,6 @@ import { Fish, Users } from 'lucide-react';
 import { useGame } from '@/context/GameContext';
 import Logo from './Logo';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 const LandingPage: React.FC = () => {
   const [playerName, setPlayerName] = useState('');
@@ -19,33 +19,20 @@ const LandingPage: React.FC = () => {
     if (!playerName.trim()) {
       return;
     }
-    
-    // Create the room first
-    const newRoomId = createRoom();
-    console.log("Created room with ID:", newRoomId);
-    
-    // Join the room with the generated room ID
-    if (newRoomId) {
-      const joinSuccess = joinRoom(newRoomId, playerName);
-      if (joinSuccess) {
-        navigate('/waiting-room');
-      }
-    }
+    createRoom();
+    // Navigate to the waiting room
+    setTimeout(() => {
+      joinRoom(gameState.roomId, playerName);
+      navigate('/waiting-room');
+    }, 100);
   };
 
   const handleJoinRoom = () => {
     if (!playerName.trim() || !roomId.trim()) {
-      toast.error("Please enter both your nickname and a room code");
       return;
     }
-    
-    console.log("Attempting to join room:", roomId.trim().toUpperCase());
-    const success = joinRoom(roomId.trim().toUpperCase(), playerName);
-    
-    if (success) {
-      navigate('/waiting-room');
-    }
-    // Error toast is shown in the joinRoom function
+    joinRoom(roomId.trim().toUpperCase(), playerName);
+    navigate('/waiting-room');
   };
 
   return (
