@@ -86,7 +86,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Create a new game room
   const createRoom = () => {
-    const roomId = generateRoomId();
+    const roomId = "123"
+    //const roomId = generateRoomId();
     setGameState({
       ...initialGameState,
       roomId
@@ -97,10 +98,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Join an existing room
   const joinRoom = (roomId: string, playerName: string) => {
-    if (roomId !== gameState.roomId) {
-      toast.error("Invalid room code");
-      return;
-    }
+    // if (roomId !== gameState.roomId) {
+    //   toast.error("Invalid room code");
+    //   return;
+    // }
 
     if (gameState.players.length >= 8) {
       toast.error("Room is full");
