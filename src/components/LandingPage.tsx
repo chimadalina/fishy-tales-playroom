@@ -27,11 +27,19 @@ const LandingPage: React.FC = () => {
     }, 100);
   };
 
-  const handleJoinRoom = () => {
-    if (!playerName.trim() || !roomId.trim()) {
-      return;
-    }
-    joinRoom(roomId.trim().toUpperCase(), playerName);
+  // const handleJoinRoom = () => {
+  //   if (!playerName.trim() || !roomId.trim()) {
+  //     return;
+  //   }
+  //   joinRoom(roomId.trim().toUpperCase(), playerName);
+  //   navigate('/waiting-room');
+  // };
+
+  const handleCreateRoom = async () => {
+    if (!playerName.trim()) return;
+  
+    const newRoomId = await createRoom();  // make createRoom return the roomId
+    await joinRoom(newRoomId, playerName);
     navigate('/waiting-room');
   };
 
