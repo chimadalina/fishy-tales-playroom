@@ -111,6 +111,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     //   return;
     // }
 
+    toast.success(`Joined room as ${playerName}`);
+    toast.success(`Joined room as ${gameState.players.length}`);
     if (gameState.players.length >= 8) {
       toast.error("Room is full");
       return;
@@ -123,7 +125,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const isFirstPlayer = gameState.players.length === 0;
     const playerId = Math.random().toString(36).substr(2, 9);
-    
+    toast.success(`about to set the player`);
     const newPlayer: PlayerType = {
       id: playerId,
       name: playerName,
@@ -136,7 +138,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     setPlayerInfo(newPlayer);
-    
+    toast.success(`about to set the game`);
     setGameState(prev => ({
       ...prev,
       players: [...prev.players, newPlayer]
