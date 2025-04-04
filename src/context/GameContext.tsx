@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from "sonner";
 
@@ -40,7 +39,7 @@ type GameContextType = {
   gameState: GameStateType;
   playerInfo: PlayerType | null;
   createRoom: () => void;
-  joinRoom: (roomId: string, playerName: string) => void;
+  joinRoom: (roomId: string, playerName: string) => boolean;
   startGame: () => void;
   submitAnswer: (answer: string) => void;
   guessAnswer: (playerId: string, isCorrect: boolean) => void;
@@ -96,20 +95,20 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Join an existing room
-  const joinRoom = (roomId: string, playerName: string) => {
+  const joinRoom = (roomId: string, playerName: string): boolean => {
     if (roomId !== gameState.roomId) {
       toast.error("Invalid room code");
-      return;
+      return false;
     }
 
     if (gameState.players.length >= 8) {
       toast.error("Room is full");
-      return;
+      return false;
     }
 
     if (gameState.status !== 'waiting') {
       toast.error("Game already started");
-      return;
+      return false;
     }
 
     const isFirstPlayer = gameState.players.length === 0;
@@ -134,6 +133,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }));
 
     toast.success(`Joined room as ${playerName}`);
+    return true;
   };
 
   // Start the game

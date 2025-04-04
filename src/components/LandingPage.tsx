@@ -28,8 +28,10 @@ const LandingPage: React.FC = () => {
     setTimeout(() => {
       const newRoomId = gameState.roomId;
       console.log("Created room with ID:", newRoomId);
-      joinRoom(newRoomId, playerName);
-      navigate('/waiting-room');
+      const joinSuccess = joinRoom(newRoomId, playerName);
+      if (joinSuccess) {
+        navigate('/waiting-room');
+      }
     }, 200); // Increased timeout to ensure room is created first
   };
 
