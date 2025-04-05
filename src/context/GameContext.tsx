@@ -49,7 +49,7 @@ type GameContextType = {
 };
 
 const initialGameState: GameStateType = {
-  roomId: '',
+  roomId: '123',
   players: [],
   status: 'waiting',
   rounds: [],
@@ -81,23 +81,13 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Generate a random room ID
   const generateRoomId = () => {
-    return Math.random().toString(36).substring(2, 8).toUpperCase();
+    //return Math.random().toString(36).substring(2, 8).toUpperCase();
+    return '123'
   };
 
-  // Create a new game room
-  // const createRoom = () => {
-  //   const roomId = "123"
-  //   //const roomId = generateRoomId();
-  //   setGameState({
-  //     ...initialGameState,
-  //     roomId
-  //   });
-    
-   
-  // };
-
   const createRoom = async (): Promise<string> => {
-    const roomId = generateRoomId();
+    // const roomId = generateRoomId();
+    const roomId = '123'
     // create the room in DB or server
     toast.success("Room created! Share the room code with your friends");
     setGameState((prev) => ({ ...prev, roomId }));
