@@ -15,41 +15,23 @@ const LandingPage: React.FC = () => {
   const { createRoom, joinRoom, gameState } = useGame();
   const navigate = useNavigate();
 
-  // const handleCreateRoom = () => {
-  //   if (!playerName.trim()) {
-  //     return;
-  //   }
-  //   createRoom();
-  //   // Navigate to the waiting room
-  //   setTimeout(() => {
-  //     joinRoom(gameState.roomId, playerName);
-  //     navigate('/waiting-room');
-  //   }, 100);
-  // };
+  const handleCreateRoom = () => {
+    if (!playerName.trim()) {
+      return;
+    }
+    createRoom();
+    // Navigate to the waiting room
+    setTimeout(() => {
+      joinRoom(gameState.roomId, playerName);
+      navigate('/waiting-room');
+    }, 100);
+  };
 
-  // const handleJoinRoom = () => {
-  //   if (!playerName.trim() || !roomId.trim()) {
-  //     return;
-  //   }
-  //   joinRoom(roomId.trim().toUpperCase(), playerName);
-  //   navigate('/waiting-room');
-  // };
-
-  const handleJoinRoom = async () => {
+  const handleJoinRoom = () => {
     if (!playerName.trim() || !roomId.trim()) {
       return;
     }
-  
-    await joinRoom(roomId.trim().toUpperCase(), playerName);  // Ensure joinRoom is awaited before navigating
-    navigate('/waiting-room');
-  };
-  
-
-  const handleCreateRoom = async () => {
-    if (!playerName.trim()) return;
-  
-    const newRoomId = await createRoom();  // make createRoom return the roomId
-    await joinRoom(newRoomId, playerName);
+    joinRoom(roomId.trim().toUpperCase(), playerName);
     navigate('/waiting-room');
   };
 

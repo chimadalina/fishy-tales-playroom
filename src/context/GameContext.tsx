@@ -85,44 +85,36 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Create a new game room
-  // const createRoom = () => {
-  //   const roomId = "123"
-  //   //const roomId = generateRoomId();
-  //   setGameState({
-  //     ...initialGameState,
-  //     roomId
-  //   });
-    
-   
-  // };
-
-  const createRoom = async (): Promise<string> => {
+  const createRoom = () => {
     const roomId = generateRoomId();
-    // create the room in DB or server
+    setGameState({
+      ...initialGameState,
+      roomId
+    });
+    
     toast.success("Room created! Share the room code with your friends");
-    setGameState((prev) => ({ ...prev, roomId }));
-    return roomId;
   };
 
   // Join an existing room
-  const joinRoom = async (roomId: string, playerName: string) => {
-    // Check if room is full
+  const joinRoom = (roomId: string, playerName: string) => {
+    if (roomId !== gameState.roomId) {
+      toast.error("Invalid room code");
+      return;
+    }
+
     if (gameState.players.length >= 8) {
       toast.error("Room is full");
-      return false;
+      return;
     }
-  
-    // Check if the game has already started
+
     if (gameState.status !== 'waiting') {
       toast.error("Game already started");
-      return false;
+      return;
     }
-  
-    // Check if this is the first player
+
     const isFirstPlayer = gameState.players.length === 0;
     const playerId = Math.random().toString(36).substr(2, 9);
-  
-    // Create the new player object
+    
     const newPlayer: PlayerType = {
       id: playerId,
       name: playerName,
@@ -133,93 +125,16 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       answer: '',
       hasSubmitted: false
     };
-  
+
     setPlayerInfo(newPlayer);
-  
-    // Make a fetch request to join the room
-    try {
-      const response = await fetch(`/api/join-room/${roomId}`, {
-        method: 'POST',
-        body: JSON.stringify({ playerId, playerName }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to join room');
-      }
-  
-      const data = await response.json();
-  
-      // Update the game state if successful
-      setGameState(prev => ({
-        ...prev,
-        players: [...prev.players, newPlayer],
-        roomId: data.roomId,  // Assuming data contains roomId
-        status: 'waiting',    // If your backend responds with the game status
-      }));
-  
-      toast.success(`Joined room as ${playerName}`);
-      return true;
-    } catch (error) {
-      toast.error('Failed to join room');
-      return false;
-    }
+    
+    setGameState(prev => ({
+      ...prev,
+      players: [...prev.players, newPlayer]
+    }));
+
+    toast.success(`Joined room as ${playerName}`);
   };
-  
-  // const joinRoom = async (roomId: string, playerName: string) => {
-  //   // if (roomId !== gameState.roomId) {
-  //   //   toast.error("Invalid room code");
-  //   //   return;
-  //   // }
-
-  //   if (gameState.players.length >= 8) {
-  //     toast.error("Room is full");
-  //     return false;
-  //   }
-
-  //   if (gameState.status !== 'waiting') {
-  //     toast.error("Game already started");
-  //     return false;
-  //   }
-
-  //   const isFirstPlayer = gameState.players.length === 0;
-  //   const playerId = Math.random().toString(36).substr(2, 9);
-  //   toast.success(`about to set the player`);
-  //   const newPlayer: PlayerType = {
-  //     id: playerId,
-  //     name: playerName,
-  //     score: 0,
-  //     isAdmin: isFirstPlayer,
-  //     isStoryteller: false,
-  //     hasRedFish: false,
-  //     answer: '',
-  //     hasSubmitted: false
-  //   };
-
-  //   setPlayerInfo(newPlayer);
-  //   //toast.success(`about to set the game`);
-  //   // setGameState(prev => ({
-  //   //   ...prev,
-  //   //   players: [...prev.players, newPlayer]
-  //   // }));
-
-  //   if (response.ok) {
-  //     setGameState(prev => ({
-  //       ...prev,
-  //       players: [...prev.players, newPlayer]
-  //     }));  // Update game state if successful
-  //     toast.success(`Joined roomyy as ${playerName}`);
-  //     return true;
-  //   } else {
-  //     toast.error('Failed to join room');
-  //     return false;
-  //   }
-
-  //   toast.success(`Joined room as ${playerName}`);
-  //   return true
-  // };
 
   // Start the game
   const startGame = () => {
