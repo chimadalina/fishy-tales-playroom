@@ -148,7 +148,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   //   toast.success(`Joined room as ${playerName}`);
   // };
 
-  export const joinRoom = async (roomId: string, playerName: string) => {
+  const joinRoom = async (roomId: string, playerName: string) => {
     const playerId = uuidv4();
     const isAdmin  = false;
   
