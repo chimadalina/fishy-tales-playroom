@@ -85,22 +85,31 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Create a new game room
-  const createRoom = () => {
-    const roomId = generateRoomId();
-    setGameState({
-      ...initialGameState,
-      roomId
-    });
+  // const createRoom = () => {
+  //   const roomId = "123"
+  //   //const roomId = generateRoomId();
+  //   setGameState({
+  //     ...initialGameState,
+  //     roomId
+  //   });
     
+   
+  // };
+
+  const createRoom = async (): Promise<string> => {
+    const roomId = generateRoomId();
+    // create the room in DB or server
     toast.success("Room created! Share the room code with your friends");
+    setGameState((prev) => ({ ...prev, roomId }));
+    return roomId;
   };
 
   // Join an existing room
   const joinRoom = (roomId: string, playerName: string) => {
-    if (roomId !== gameState.roomId) {
-      toast.error("Invalid room code");
-      return;
-    }
+    // if (roomId !== gameState.roomId) {
+    //   toast.error("Invalid room code");
+    //   return;
+    // }
 
     if (gameState.players.length >= 8) {
       toast.error("Room is full");
