@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from "sonner";
 import { supabase } from '@/integrations/supabase';
-import { v4 as uuidv4 } from 'uuid'; // For generating unique player IDs
+//import { v4 as uuidv4 } from 'uuid'; // For generating unique player IDs
 
 // Types for our game state
 type PlayerType = {
@@ -83,8 +83,13 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Generate a random room ID
   const generateRoomId = () => {
-    //return Math.random().toString(36).substring(2, 8).toUpperCase();
-    return '123'
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
+    //return '123'
+  };
+
+  const generatePlayerId = () => {
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
+    //return '123'
   };
 
   const createRoom = async (): Promise<string> => {
@@ -149,7 +154,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // };
 
   const joinRoom = async (roomId: string, playerName: string) => {
-    const playerId = uuidv4();
+    const playerId = generatePlayerId();
     const isAdmin  = false;
   
     const { error: playerError } = await supabase.from('players').insert([
