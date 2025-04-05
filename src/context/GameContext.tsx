@@ -1,6 +1,8 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from "sonner";
+import { supabase } from '@/integrations/supabase';
+import { v4 as uuidv4 } from 'uuid'; // For generating unique player IDs
 
 // Types for our game state
 type PlayerType = {
@@ -86,34 +88,89 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const createRoom = async (): Promise<string> => {
-    // const roomId = generateRoomId();
-    const roomId = '123'
+    const roomId = generateRoomId();
+    const { data, error } = await supabase.from('rooms').insert([
+      {
+        id: roomId,
+        status: 'waiting',
+      },
+    ]);
+  
+    if (error) {
+      console.error('Error creating room:', error);
+      throw new Error('Room creation failed');
+    }
+
     // create the room in DB or server
     toast.success("Room created! Share the room code with your friends");
     setGameState((prev) => ({ ...prev, roomId }));
     return roomId;
   };
 
-  // Join an existing room
-  const joinRoom = (roomId: string, playerName: string) => {
-    // if (roomId !== gameState.roomId) {
-    //   toast.error("Invalid room code");
-    //   return;
-    // }
+  // // Join an existing room
+  // const joinRoom = (roomId: string, playerName: string) => {
+  //   // if (roomId !== gameState.roomId) {
+  //   //   toast.error("Invalid room code");
+  //   //   return;
+  //   // }
 
-    if (gameState.players.length >= 8) {
-      toast.error("Room is full");
-      return;
-    }
+  //   if (gameState.players.length >= 8) {
+  //     toast.error("Room is full");
+  //     return;
+  //   }
 
-    if (gameState.status !== 'waiting') {
-      toast.error("Game already started");
-      return;
-    }
+  //   if (gameState.status !== 'waiting') {
+  //     toast.error("Game already started");
+  //     return;
+  //   }
 
-    const isFirstPlayer = gameState.players.length === 0;
-    const playerId = Math.random().toString(36).substr(2, 9);
+  //   const isFirstPlayer = gameState.players.length === 0;
+  //   const playerId = Math.random().toString(36).substr(2, 9);
     
+  //   const newPlayer: PlayerType = {
+  //     id: playerId,
+  //     name: playerName,
+  //     score: 0,
+  //     isAdmin: isFirstPlayer,
+  //     isStoryteller: false,
+  //     hasRedFish: false,
+  //     answer: '',
+  //     hasSubmitted: false
+  //   };
+
+  //   setPlayerInfo(newPlayer);
+    
+  //   setGameState(prev => ({
+  //     ...prev,
+  //     players: [...prev.players, newPlayer]
+  //   }));
+
+  //   toast.success(`Joined room as ${playerName}`);
+  // };
+
+  export const joinRoom = async (roomId: string, playerName: string) => {
+    const playerId = uuidv4();
+    const isAdmin  = false;
+  
+    const { error: playerError } = await supabase.from('players').insert([
+      {
+        id: playerId,
+        room_id: roomId,
+        name: playerName,
+        is_admin: isAdmin,
+        is_storyteller: false,
+        has_red_fish: false,
+        score: 0,
+        answer: '',
+        has_submitted: false,
+      },
+    ]);
+  
+    if (playerError) {
+      console.error('Error joining room:', playerError);
+      throw new Error('Could not join room');
+    }
+
     const newPlayer: PlayerType = {
       id: playerId,
       name: playerName,
@@ -131,8 +188,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ...prev,
       players: [...prev.players, newPlayer]
     }));
-
-    toast.success(`Joined room as ${playerName}`);
+  
+    return playerId;
   };
 
   // Start the game
