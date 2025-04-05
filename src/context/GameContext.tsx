@@ -95,19 +95,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     toast.success("Room created! Share the room code with your friends");
   };
 
-  const joinRoom = async (roomId: string, playerName: string) => {
-    // Assuming some asynchronous logic here (e.g., calling an API or connecting to a socket)
-    const response = await fetch(`/api/join-room/${roomId}`, { method: 'POST', body: JSON.stringify({ playerName }) });
-  
-    if (response.ok) {
-      setGameState({ roomId, playerName });  // Update game state if successful
-      return true;
-    } else {
-      console.error('Failed to join room');
-      return false;
-    }
-  };
-
   // Join an existing room
   const joinRoom = (roomId: string, playerName: string) => {
     if (roomId !== gameState.roomId) {
