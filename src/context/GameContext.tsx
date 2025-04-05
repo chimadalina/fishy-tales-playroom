@@ -106,24 +106,23 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Join an existing room
   const joinRoom = async (roomId: string, playerName: string) => {
-    // if (roomId !== gameState.roomId) {
-    //   toast.error("Invalid room code");
-    //   return;
-    // }
-
+    // Check if room is full
     if (gameState.players.length >= 8) {
       toast.error("Room is full");
       return false;
     }
-
+  
+    // Check if the game has already started
     if (gameState.status !== 'waiting') {
       toast.error("Game already started");
       return false;
     }
-
+  
+    // Check if this is the first player
     const isFirstPlayer = gameState.players.length === 0;
     const playerId = Math.random().toString(36).substr(2, 9);
-    toast.success(`about to set the player`);
+  
+    // Create the new player object
     const newPlayer: PlayerType = {
       id: playerId,
       name: playerName,
@@ -134,29 +133,93 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       answer: '',
       hasSubmitted: false
     };
-
+  
     setPlayerInfo(newPlayer);
-    //toast.success(`about to set the game`);
-    // setGameState(prev => ({
-    //   ...prev,
-    //   players: [...prev.players, newPlayer]
-    // }));
-
-    if (response.ok) {
+  
+    // Make a fetch request to join the room
+    try {
+      const response = await fetch(`/api/join-room/${roomId}`, {
+        method: 'POST',
+        body: JSON.stringify({ playerId, playerName }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to join room');
+      }
+  
+      const data = await response.json();
+  
+      // Update the game state if successful
       setGameState(prev => ({
         ...prev,
-        players: [...prev.players, newPlayer]
-      }));  // Update game state if successful
-      toast.success(`Joined roomyy as ${playerName}`);
+        players: [...prev.players, newPlayer],
+        roomId: data.roomId,  // Assuming data contains roomId
+        status: 'waiting',    // If your backend responds with the game status
+      }));
+  
+      toast.success(`Joined room as ${playerName}`);
       return true;
-    } else {
+    } catch (error) {
       toast.error('Failed to join room');
       return false;
     }
-
-    toast.success(`Joined room as ${playerName}`);
-    return true
   };
+  
+  // const joinRoom = async (roomId: string, playerName: string) => {
+  //   // if (roomId !== gameState.roomId) {
+  //   //   toast.error("Invalid room code");
+  //   //   return;
+  //   // }
+
+  //   if (gameState.players.length >= 8) {
+  //     toast.error("Room is full");
+  //     return false;
+  //   }
+
+  //   if (gameState.status !== 'waiting') {
+  //     toast.error("Game already started");
+  //     return false;
+  //   }
+
+  //   const isFirstPlayer = gameState.players.length === 0;
+  //   const playerId = Math.random().toString(36).substr(2, 9);
+  //   toast.success(`about to set the player`);
+  //   const newPlayer: PlayerType = {
+  //     id: playerId,
+  //     name: playerName,
+  //     score: 0,
+  //     isAdmin: isFirstPlayer,
+  //     isStoryteller: false,
+  //     hasRedFish: false,
+  //     answer: '',
+  //     hasSubmitted: false
+  //   };
+
+  //   setPlayerInfo(newPlayer);
+  //   //toast.success(`about to set the game`);
+  //   // setGameState(prev => ({
+  //   //   ...prev,
+  //   //   players: [...prev.players, newPlayer]
+  //   // }));
+
+  //   if (response.ok) {
+  //     setGameState(prev => ({
+  //       ...prev,
+  //       players: [...prev.players, newPlayer]
+  //     }));  // Update game state if successful
+  //     toast.success(`Joined roomyy as ${playerName}`);
+  //     return true;
+  //   } else {
+  //     toast.error('Failed to join room');
+  //     return false;
+  //   }
+
+  //   toast.success(`Joined room as ${playerName}`);
+  //   return true
+  // };
 
   // Start the game
   const startGame = () => {
