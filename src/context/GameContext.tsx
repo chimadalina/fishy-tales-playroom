@@ -105,7 +105,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Join an existing room
-  const joinRoom = (roomId: string, playerName: string) => {
+  const joinRoom = async (roomId: string, playerName: string) => {
     // if (roomId !== gameState.roomId) {
     //   toast.error("Invalid room code");
     //   return;
@@ -113,12 +113,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (gameState.players.length >= 8) {
       toast.error("Room is full");
-      return;
+      return false;
     }
 
     if (gameState.status !== 'waiting') {
       toast.error("Game already started");
-      return;
+      return false;
     }
 
     const isFirstPlayer = gameState.players.length === 0;
@@ -136,13 +136,26 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     setPlayerInfo(newPlayer);
-    toast.success(`about to set the game`);
-    setGameState(prev => ({
-      ...prev,
-      players: [...prev.players, newPlayer]
-    }));
+    //toast.success(`about to set the game`);
+    // setGameState(prev => ({
+    //   ...prev,
+    //   players: [...prev.players, newPlayer]
+    // }));
+
+    if (response.ok) {
+      setGameState(prev => ({
+        ...prev,
+        players: [...prev.players, newPlayer]
+      }));  // Update game state if successful
+      toast.success(`Joined roomyy as ${playerName}`);
+      return true;
+    } else {
+      toast.error('Failed to join room');
+      return false;
+    }
 
     toast.success(`Joined room as ${playerName}`);
+    return true
   };
 
   // Start the game

@@ -35,10 +35,11 @@ const LandingPage: React.FC = () => {
   //   navigate('/waiting-room');
   // };
 
-  const handleJoinRoom = () => {
+  const handleJoinRoom = async () => {
     if (!playerName.trim() || !roomId.trim()) {
       return;
     }
+  
     await joinRoom(roomId.trim().toUpperCase(), playerName);  // Ensure joinRoom is awaited before navigating
     navigate('/waiting-room');
   };
